@@ -8,14 +8,13 @@
 
 [[nodiscard]] constexpr std::optional<uint64_t> binary_search(std::span<const uint64_t> data, const uint64_t num)
 {
-    const auto begin = data.begin();
+    const auto pBegin = data.begin().base();
     while (!data.empty())
     {
         const uint64_t half = data.size() / 2;
         if (num == data[half])
         {
             const uint64_t *pIndex = &data[half];
-            const uint64_t *pBegin = begin.base();
             const uint64_t index = (pIndex - pBegin);
             return index;
         }
