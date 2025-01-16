@@ -8,19 +8,25 @@
 
 [[nodiscard]] constexpr std::optional<uint64_t> binary_search(std::span<const uint64_t> data, const uint64_t num)
 {
-    const auto pBegin = data.begin().base();
+    const auto beginPtr = data.data();
+    std::optional<uint64_t> result = std::nullopt;
+
     while (!data.empty())
     {
-        const uint64_t half = data.size() / 2;
-        if (num == data[half])
+        const uint64_t mid = data.size() / 2;
+        if (num == data[mid])
         {
-            const uint64_t *pIndex = &data[half];
-            const uint64_t index = (pIndex - pBegin);
-            return index;
+            const uint64_t *indexPtr = &data[mid];
+            const uint64_t index = (indexPtr - beginPtr);
+            result = index;
+            data = data.first(mid); // Continue searching in the left half
         }
-        data = (num > data[half]) ? data.last(half) : data.first(half);
+        else
+        {
+            data = (num > data[mid]) ? data.last(mid) : data.first(mid);
+        }
     }
-    return {};
+    return result;
 }
 
 int main()
@@ -72,6 +78,20 @@ int main()
 
         // Invalid search
         CheckFailure(binary_search(arr, 2).has_value() == false);
+    }
+
+    // Duplicate elements in array
+    {
+        std::vector<uint64_t> arr = {1, 5, 5, 9, 10};
+
+        CheckFailure(binary_search(arr, 5) == 1); // Ensure it finds the first occurrence
+    }
+
+    // Large numbers in array
+    {
+        std::vector<uint64_t> arr = {1, 5, 9, 10, 1000000000000};
+
+        CheckFailure(binary_search(arr, 1000000000000) == 4);
     }
 
     std::cout << "Success\n";
