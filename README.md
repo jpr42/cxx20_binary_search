@@ -2,4 +2,4 @@
 
 constexpr binary search implemented elegantly using C++20's std::span
 
-GodBolt Result: https://godbolt.org/z/Ka4YE9Psh
+GodBolt Result: https://godbolt.org/z/f99cx4Wf8
